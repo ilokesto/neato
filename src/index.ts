@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-type NeatoInput = clsx.ClassValue;
+type NeatoInputs = clsx.ClassValue[];
 
-export function neato(...inputs: Array<NeatoInput>) {
+export function neato(...inputs: NeatoInputs) {
   return twMerge(
     clsx(...inputs)
   );

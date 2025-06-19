@@ -16,15 +16,10 @@
   "license": "MIT",
   "description": "",
   "devDependencies": {
-    "@types/node": "^24.0.3",
-    "@types/react": "^19.1.8",
     "@typescript-eslint/eslint-plugin": "^8.34.1",
     "@typescript-eslint/parser": "^8.34.1",
-    "@vitejs/plugin-react": "^4.5.2",
     "eslint": "^9.29.0",
-    "eslint-plugin-react": "^7.37.5",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "clsx": "^2.1.1",

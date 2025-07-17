@@ -15,6 +15,7 @@
 - 🎨 **Variants System** - Powerful conditional styling with type safety
 - 🧩 **Compound Variants** - Complex styling based on multiple conditions
 - 📱 **Multi-slot Support** - Style multiple component parts independently
+- 🌓 **Theme System** - Complete theme management with Light/Dark/System support
 - 🚀 **TypeScript First** - Complete type safety and IntelliSense
 - 📦 **Lightweight** - Minimal bundle size with zero runtime overhead
 - ⚡ **Fast** - Optimized for performance
@@ -117,6 +118,154 @@ function Button({ variant, size, className, ...props }) {
 // Fully typed with IntelliSense
 <Button variant="secondary" size="lg" />
 ```
+
+## 🌓 Theme System
+
+neato provides a complete theme management system that's easy to use in React applications.
+
+### Basic Setup
+
+```typescript
+import { NeatoThemeProvider, createNeatoThemeScript } from 'neato';
+
+// 1. Set up Provider at the app root
+function App() {
+  return (
+    <NeatoThemeProvider>
+      <YourComponents />
+    </NeatoThemeProvider>
+  );
+}
+
+// 2. Add script to HTML head for FOUC prevention (Next.js example)
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <head>
+        <script 
+          dangerouslySetInnerHTML={{ 
+            __html: createNeatoThemeScript() 
+          }} 
+        />
+      </head>
+      <body>
+        <NeatoThemeProvider>
+          {children}
+        </NeatoThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### Theme Usage
+
+```typescript
+import { useNeatoTheme } from 'neato';
+
+function ThemeToggle() {
+  const { theme, setTheme, effectiveTheme, isHydrated } = useNeatoTheme();
+
+  return (
+    <div>
+      <button onClick={() => setTheme('light')}>
+        Light Mode
+      </button>
+      <button onClick={() => setTheme('dark')}>
+        Dark Mode
+      </button>
+      <button onClick={() => setTheme('system')}>
+        System Setting
+      </button>
+      
+      <p>Current theme: {theme}</p>
+      <p>Effective theme: {effectiveTheme}</p>
+    </div>
+  );
+}
+```
+
+### Theme-based Styling
+
+```typescript
+// Use with Tailwind CSS dark: modifier
+const cardStyles = neatoVariants({
+  base: 'p-6 rounded-lg border transition-colors',
+  variants: {
+    variant: {
+      default: 'bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700',
+      elevated: 'bg-white border-gray-200 shadow-lg dark:bg-gray-800 dark:border-gray-700'
+    }
+  }
+});
+
+function Card({ variant = 'default', children }) {
+  return (
+    <div className={cardStyles({ variant })}>
+      {children}
+    </div>
+  );
+}
+```
+
+### Advanced Theme Toggle Component
+
+```typescript
+import { useNeatoTheme } from 'neato';
+
+function AdvancedThemeToggle() {
+  const { theme, setTheme, effectiveTheme } = useNeatoTheme();
+
+  const cycleTheme = () => {
+    if (theme === 'light') setTheme('dark');
+    else if (theme === 'dark') setTheme('system');
+    else setTheme('light');
+  };
+
+  const getIcon = () => {
+    if (theme === 'system') return '🌓';
+    return effectiveTheme === 'dark' ? '🌙' : '☀️';
+  };
+
+  const getLabel = () => {
+    if (theme === 'system') return 'System';
+    return theme === 'dark' ? 'Dark' : 'Light';
+  };
+
+  return (
+    <button 
+      onClick={cycleTheme}
+      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+    >
+      <span>{getIcon()}</span>
+      <span>{getLabel()}</span>
+    </button>
+  );
+}
+```
+
+### Theme API
+
+#### `useNeatoTheme()`
+
+Returns theme state and control functions.
+
+- `theme`: Currently set theme (`'light' | 'dark' | 'system'`)
+- `setTheme`: Function to change the theme
+- `effectiveTheme`: Actually applied theme (`'light' | 'dark'`)
+- `isHydrated`: Whether client hydration is complete
+
+#### `createNeatoThemeScript()`
+
+Generates an inline script string to prevent FOUC (Flash of Unstyled Content).
+
+### Features
+
+- ✅ **Automatic System Theme Detection** - `prefers-color-scheme` media query support
+- ✅ **LocalStorage Integration** - Automatic saving and restoration of settings
+- ✅ **SSR Safe** - Safe for server-side rendering and hydration
+- ✅ **FOUC Prevention** - No flashing during page load
+- ✅ **TypeScript Support** - Complete type safety
 
 ## 📚 API Reference
 

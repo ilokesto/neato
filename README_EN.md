@@ -1,25 +1,25 @@
 # neato
 
-**Language** : [English](./README_EN.md) | 한국어
+**Language** : English | [한국어](./README.md)
 
-> React 애플리케이션에서 효율적인 CSS 클래스 관리를 위한 강력한 유틸리티 라이브러리
+> A powerful utility library for efficient CSS class management in React applications
 
 [![npm version](https://badge.fury.io/js/neato.svg)](https://badge.fury.io/js/neato)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/neato)](https://bundlephobia.com/package/neato)
 
-## ✨ 특징
+## ✨ Features
 
-- 🎯 **간단한 API** - 하나의 함수로 모든 클래스 병합 요구사항 처리
-- 🔧 **스마트 병합** - Tailwind CSS 클래스 충돌 자동 해결
-- 🎨 **Variants 시스템** - 타입 안전성을 갖춘 강력한 조건부 스타일링
-- 🧩 **Compound Variants** - 여러 조건에 기반한 복잡한 스타일링
-- 📱 **Multi-slot 지원** - 컴포넌트의 여러 부분을 독립적으로 스타일링
-- 🚀 **TypeScript 우선** - 완전한 타입 안전성과 IntelliSense
-- 📦 **경량** - 런타임 오버헤드 없이 최소 번들 크기
-- ⚡ **빠름** - 성능에 최적화
+- 🎯 **Simple API** - One function handles all class merging needs
+- 🔧 **Smart Merging** - Automatic Tailwind CSS conflict resolution
+- 🎨 **Variants System** - Powerful conditional styling with type safety
+- 🧩 **Compound Variants** - Complex styling based on multiple conditions
+- 📱 **Multi-slot Support** - Style multiple component parts independently
+- 🚀 **TypeScript First** - Complete type safety and IntelliSense
+- 📦 **Lightweight** - Minimal bundle size with zero runtime overhead
+- ⚡ **Fast** - Optimized for performance
 
-## 📦 설치
+## 📦 Installation
 
 ```bash
 npm install neato
@@ -33,14 +33,14 @@ yarn add neato
 pnpm add neato
 ```
 
-## 🚀 빠른 시작
+## 🚀 Quick Start
 
-### 기본 사용법
+### Basic Usage
 
 ```typescript
 import { neato } from 'neato';
 
-// 간단한 클래스 병합
+// Simple class merging
 const className = neato(
   'px-4 py-2 rounded',
   'bg-blue-500 text-white',
@@ -48,14 +48,14 @@ const className = neato(
   disabled && 'opacity-50 cursor-not-allowed'
 );
 
-// Tailwind 충돌 자동 해결
-neato('px-2 px-4'); // → 'px-4' (나중 값이 우선)
+// Automatic Tailwind conflict resolution
+neato('px-2 px-4'); // → 'px-4' (later value wins)
 neato('text-lg text-sm'); // → 'text-sm'
 ```
 
-### 고급 Variants 시스템
+### Advanced Variants System
 
-재사용 가능하고 타입 안전한 컴포넌트 스타일 생성:
+Create reusable, type-safe component styles:
 
 ```typescript
 import { neatoVariants } from 'neato';
@@ -88,7 +88,7 @@ const buttonStyles = neatoVariants({
   }
 });
 
-// React에서 사용
+// Usage in React
 function Button({ variant, size, className, ...props }) {
   return (
     <button 
@@ -98,15 +98,15 @@ function Button({ variant, size, className, ...props }) {
   );
 }
 
-// IntelliSense와 함께 완전한 타입 지원
+// Fully typed with IntelliSense
 <Button variant="secondary" size="lg" />
 ```
 
-## 📚 API 레퍼런스
+## 📚 API Reference
 
 ### `neato(...inputs)`
 
-Tailwind 충돌 자동 해결과 함께 클래스를 병합합니다.
+Merges classes with automatic Tailwind conflict resolution.
 
 ```typescript
 neato(
@@ -114,16 +114,16 @@ neato(
   condition && 'conditional-classes',
   { 'class-name': boolean },
   ['array', 'of', 'classes'],
-  undefined, // 무시됨
-  null       // 무시됨
+  undefined, // ignored
+  null       // ignored
 );
 ```
 
 ### `neatoVariants(config)`
 
-컴포넌트 스타일링을 위한 타입 안전한 variant 시스템을 생성합니다.
+Creates a type-safe variant system for component styling.
 
-#### 단일 컴포넌트 모드
+#### Single Component Mode
 
 ```typescript
 const styles = neatoVariants({
@@ -146,11 +146,11 @@ const styles = neatoVariants({
   }
 });
 
-// 반환값: string
+// Returns: string
 const className = styles({ variantName: 'option2' });
 ```
 
-#### Multi-slot 컴포넌트 모드
+#### Multi-slot Component Mode
 
 ```typescript
 const styles = neatoVariants({
@@ -168,7 +168,7 @@ const styles = neatoVariants({
   }
 });
 
-// 반환값: { container: string, header: string, content: string }
+// Returns: { container: string, header: string, content: string }
 const classes = styles({
   container: { variant: 'primary' },
   header: { size: 'lg' },
@@ -176,9 +176,9 @@ const classes = styles({
 });
 ```
 
-## 🎯 실제 사용 예시
+## 🎯 Real-world Examples
 
-### 채팅 메시지 컴포넌트
+### Chat Message Component
 
 ```typescript
 const messageStyles = neatoVariants({
@@ -212,7 +212,7 @@ function ChatMessage({ content, sender, status }) {
 }
 ```
 
-### 여러 부분으로 구성된 카드 컴포넌트
+### Card Component with Multiple Parts
 
 ```typescript
 const cardStyles = neatoVariants({
@@ -268,11 +268,11 @@ function Card({ size, headerAlign, contentSpacing, title, children }) {
 }
 ```
 
-## 🤝 왜 neato인가?
+## 🤝 Why neato?
 
-### neato 사용 전
+### Before neato
 ```typescript
-// 장황하고 오류가 발생하기 쉬움
+// Verbose and error-prone
 <div className={clsx(
   'animate-slide-up-fade max-w-md rounded-md px-4 py-2 shadow',
   isMine 
@@ -284,9 +284,9 @@ function Card({ size, headerAlign, contentSpacing, title, children }) {
 )} />
 ```
 
-### neato 사용 후
+### After neato
 ```typescript
-// 깔끔하고 유지보수하기 쉬움
+// Clean and maintainable
 const messageStyles = neatoVariants({
   base: 'animate-slide-up-fade max-w-md rounded-md px-4 py-2 shadow',
   variants: {
@@ -314,12 +314,12 @@ const messageStyles = neatoVariants({
 })} />
 ```
 
-## 📖 TypeScript 지원
+## 📖 TypeScript Support
 
-neato는 TypeScript로 구축되어 우수한 타입 안전성을 제공합니다:
+neato is built with TypeScript and provides excellent type safety:
 
 ```typescript
-// 완전한 타입 지원 variants
+// Fully typed variants
 const styles = neatoVariants({
   variants: {
     size: {
@@ -330,31 +330,31 @@ const styles = neatoVariants({
   }
 });
 
-// TypeScript가 유효한 옵션을 강제합니다
-styles({ size: 'xl' }); // ❌ 오류: 'xl'은 할당할 수 없습니다
-styles({ size: 'lg' }); // ✅ 유효함
+// TypeScript will enforce valid options
+styles({ size: 'xl' }); // ❌ Error: 'xl' is not assignable
+styles({ size: 'lg' }); // ✅ Valid
 ```
 
-## 🔧 설정
+## 🔧 Configuration
 
-neato는 모든 Tailwind CSS 설정과 잘 작동합니다. 최적의 성능을 위해 `tailwind.config.js`에 neato를 사용하는 모든 파일이 포함되어 있는지 확인하세요:
+neato works great with any Tailwind CSS setup. For optimal performance, ensure your `tailwind.config.js` includes all files where you use neato:
 
 ```javascript
 module.exports = {
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
-    // neato를 사용하는 다른 경로들도 추가
+    // Add any other paths where you use neato
   ],
-  // ... 나머지 설정
+  // ... rest of your config
 };
 ```
 
-## 📄 라이선스
+## 📄 License
 
 MIT © [Jeong Jinho](https://github.com/ayden94)
 
 ---
 
 <div align="center">
-  <strong>neato</strong> - CSS 클래스 관리를 깔끔하고 정리되게! 🎨
+  <strong>neato</strong> - Making CSS class management neat and tidy! 🎨
 </div>

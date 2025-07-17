@@ -28,6 +28,7 @@
   "files": [
     "dist",
     "README.md",
+    "KR_README.md",
     "LICENSE"
   ],
   "scripts": {

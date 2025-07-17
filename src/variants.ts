@@ -1,6 +1,6 @@
-
+import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
 import type { VariantProps, VariantsConfig } from './types';
-import { mergeClasses, resolveTailwindConflicts } from './utils';
 
 export function neatoVariants<T extends VariantProps>(
   config: VariantsConfig<T>
@@ -42,6 +42,6 @@ export function neatoVariants(config: any): any {
       if (matches) classes.push(className);
     }
     if (props.className) classes.push(props.className);
-    return resolveTailwindConflicts(mergeClasses(...classes));
+    return twMerge(clsx(...classes));
   };
 }

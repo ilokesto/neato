@@ -126,7 +126,8 @@ neato provides a complete theme management system that's easy to use in React ap
 ### Basic Setup
 
 ```typescript
-import { NeatoThemeProvider, createNeatoThemeScript } from 'neato';
+import { NeatoThemeProvider } from 'neato/theme';
+import { createNeatoThemeScript } from 'neato/theme-script';
 
 // 1. Set up Provider at the app root
 function App() {
@@ -156,6 +157,40 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+```
+
+### Tailwind CSS Configuration
+
+To use with the theme system, configure as follows:
+
+**For Tailwind CSS v4:**
+
+Add the following to your `global.css` or main CSS file:
+
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+**For Tailwind CSS v3:**
+
+Add the following configuration to `tailwind.config.js`:
+
+```javascript
+module.exports = {
+  darkMode: ['class'],
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    // other paths...
+  ],
+  theme: {
+    extend: {
+      // custom style extensions...
+    }
+  },
+  plugins: [
+    // other plugins...
+  ]
+};
 ```
 
 ### Theme Usage
@@ -251,9 +286,47 @@ function AdvancedThemeToggle() {
 Returns theme state and control functions.
 
 - `theme`: Currently set theme (`'light' | 'dark' | 'system'`)
+  - The theme mode **directly set by the user**
+  - `'light'` - User selected light mode
+  - `'dark'` - User selected dark mode  
+  - `'system'` - User chose to follow system settings
+
 - `setTheme`: Function to change the theme
+  - Type: `(theme: NeatoTheme) => void`
+  - Usage: `setTheme('dark')`, `setTheme('light')`, `setTheme('system')`
+
 - `effectiveTheme`: Actually applied theme (`'light' | 'dark'`)
+  - The **actually applied** theme (final theme reflected in DOM)
+  - When `theme` is `'system'` and user OS is in dark mode → `effectiveTheme` is `'dark'`
+  - When `theme` is `'light'` → `effectiveTheme` is `'light'`
+
 - `isHydrated`: Whether client hydration is complete
+  - Type: `boolean`
+  - `true` - JavaScript is running in browser, theme functionality available
+  - `false` - During server rendering or before hydration (theme changes disabled)
+
+```typescript
+// Practical usage example
+function ThemeStatus() {
+  const { theme, setTheme, effectiveTheme, isHydrated } = useNeatoTheme();
+
+  if (!isHydrated) {
+    return <div>Loading...</div>; // Before hydration
+  }
+
+  return (
+    <div>
+      <p>Set theme: {theme}</p>
+      <p>Effective theme: {effectiveTheme}</p>
+      
+      {/* When using system theme, effective theme may differ */}
+      {theme === 'system' && (
+        <p>Following system settings, displaying in {effectiveTheme} mode</p>
+      )}
+    </div>
+  );
+}
+```
 
 #### `createNeatoThemeScript()`
 

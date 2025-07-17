@@ -127,7 +127,8 @@ neato는 React 애플리케이션에서 쉽게 사용할 수 있는 완전한 �
 ### 기본 설정
 
 ```typescript
-import { NeatoThemeProvider, createNeatoThemeScript } from 'neato';
+import { NeatoThemeProvider } from 'neato/theme';
+import { createNeatoThemeScript } from 'neato/theme-script';
 
 // 1. 앱 최상단에 Provider 설정
 function App() {
@@ -159,10 +160,44 @@ export default function RootLayout({ children }) {
 }
 ```
 
+### Tailwind CSS 설정
+
+테마 시스템과 함께 사용하려면 다음과 같이 설정하세요:
+
+**Tailwind CSS v4 사용시:**
+
+`global.css` 또는 메인 CSS 파일에 다음을 추가:
+
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+**Tailwind CSS v3 사용시:**
+
+`tailwind.config.js`에 다음 설정을 추가:
+
+```javascript
+module.exports = {
+  darkMode: ['class'],
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    // 다른 경로들...
+  ],
+  theme: {
+    extend: {
+      // 커스텀 스타일 확장...
+    }
+  },
+  plugins: [
+    // 다른 플러그인들...
+  ]
+};
+```
+
 ### 테마 사용법
 
 ```typescript
-import { useNeatoTheme } from 'neato';
+import { useNeatoTheme } from 'neato/theme';
 
 function ThemeToggle() {
   const { theme, setTheme, effectiveTheme, isHydrated } = useNeatoTheme();
@@ -212,7 +247,7 @@ function Card({ variant = 'default', children }) {
 ### 고급 테마 토글 컴포넌트
 
 ```typescript
-import { useNeatoTheme } from 'neato';
+import { useNeatoTheme } from 'neato/theme';
 
 function AdvancedThemeToggle() {
   const { theme, setTheme, effectiveTheme } = useNeatoTheme();
@@ -252,9 +287,47 @@ function AdvancedThemeToggle() {
 테마 상태와 제어 함수를 반환합니다.
 
 - `theme`: 현재 설정된 테마 (`'light' | 'dark' | 'system'`)
+  - 사용자가 **직접 설정한** 테마 모드
+  - `'light'` - 라이트 모드 선택
+  - `'dark'` - 다크 모드 선택  
+  - `'system'` - 시스템 설정을 따르도록 선택
+
 - `setTheme`: 테마를 변경하는 함수
+  - 타입: `(theme: NeatoTheme) => void`
+  - 사용법: `setTheme('dark')`, `setTheme('light')`, `setTheme('system')`
+
 - `effectiveTheme`: 실제로 적용된 테마 (`'light' | 'dark'`)
+  - **실제로 적용되고 있는** 테마 (DOM에 반영된 최종 테마)
+  - `theme`이 `'system'`이고 사용자 OS가 다크모드인 경우 → `effectiveTheme`은 `'dark'`
+  - `theme`이 `'light'`인 경우 → `effectiveTheme`은 `'light'`
+
 - `isHydrated`: 클라이언트 하이드레이션 완료 여부
+  - 타입: `boolean`
+  - `true` - 브라우저에서 JavaScript가 실행되어 테마 기능 사용 가능
+  - `false` - 서버 렌더링 중이거나 아직 하이드레이션 전 (테마 변경 비활성화)
+
+```typescript
+// 실제 사용 예시
+function ThemeStatus() {
+  const { theme, setTheme, effectiveTheme, isHydrated } = useNeatoTheme();
+
+  if (!isHydrated) {
+    return <div>로딩 중...</div>; // 하이드레이션 전
+  }
+
+  return (
+    <div>
+      <p>설정된 테마: {theme}</p>
+      <p>실제 적용된 테마: {effectiveTheme}</p>
+      
+      {/* 시스템 테마일 때는 실제 적용된 테마와 다를 수 있음 */}
+      {theme === 'system' && (
+        <p>시스템 설정을 따라 {effectiveTheme} 모드로 표시됩니다</p>
+      )}
+    </div>
+  );
+}
+```
 
 #### `createNeatoThemeScript()`
 

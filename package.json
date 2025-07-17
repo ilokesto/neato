@@ -32,6 +32,10 @@
     "./theme": {
       "import": "./dist/theme.js",
       "types": "./dist/theme.d.ts"
+    },
+    "./theme-script": {
+      "import": "./dist/theme-script.js",
+      "types": "./dist/theme-script.d.ts"
     }
   },
   "files": [

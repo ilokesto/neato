@@ -258,14 +258,19 @@ export function resolveTailwindConflicts(classNames: string): string {
   const classes = classNames.split(/\s+/).filter(Boolean);
   const resolvedClasses: Record<string, string> = {};
   for (const className of classes) {
-    let conflictKey = className;
+    // prefix(예: sm:hover:)와 유틸리티 분리
+    const match = className.match(/^((?:[a-z]+:)*)(.+)$/);
+    const prefix = match ? match[1] : '';
+    const utility = match ? match[2] : className;
+    let conflictKey = utility;
     for (const [key, regex] of Object.entries(TAILWIND_CONFLICTS)) {
-      if (regex.test(className)) {
+      if (regex.test(utility)) {
         conflictKey = key;
         break;
       }
     }
-    resolvedClasses[conflictKey] = className;
+    // prefix+conflictKey 조합으로 마지막 값만 남김
+    resolvedClasses[prefix + conflictKey] = className;
   }
   return Object.values(resolvedClasses).join(' ');
 }

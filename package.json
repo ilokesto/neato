@@ -26,11 +26,7 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "README.md",
-    "KR_README.md",
-    "LICENSE",
-    ".vscode",
-    "scripts"
+    "README.md"
   ],
   "scripts": {
     "build": "tsc",

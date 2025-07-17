@@ -33,6 +33,22 @@ yarn add neato
 pnpm add neato
 ```
 
+## 🛠️ Tailwind CSS IntelliSense Integration
+
+To enable Tailwind CSS IntelliSense (auto-completion) in neato/neatoVariants functions, add the following to your project root `.vscode/settings.json` **or** your global VS Code settings (`Ctrl/Cmd + ,` → `settings.json`):
+
+```jsonc
+{
+  "tailwindCSS.experimental.classRegex": [
+    ["neatoVariants\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"] ,
+    ["neato\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"]
+  ]
+}
+```
+
+- You must fully restart VS Code for changes to take effect.
+- The Tailwind CSS IntelliSense extension must be installed.
+
 ## 🚀 Quick Start
 
 ### Basic Usage

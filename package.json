@@ -36,8 +36,6 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "prepublishOnly": "npm run build",
-    "postinstall": "node scripts/setup-intellisense.js",
-    "setup-intellisense": "node scripts/setup-intellisense.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {},

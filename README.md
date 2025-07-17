@@ -33,6 +33,23 @@ yarn add neato
 pnpm add neato
 ```
 
+
+## 🛠️ Tailwind CSS IntelliSense 연동
+
+Tailwind CSS 자동완성(IntelliSense)을 neato/neatoVariants 함수에서 사용하려면, 프로젝트 루트의 `.vscode/settings.json` 또는 VS Code의 전역 설정(`Ctrl/Cmd + ,` → `settings.json`)에 아래 설정을 추가하세요:
+
+```jsonc
+{
+  "tailwindCSS.experimental.classRegex": [
+    ["neatoVariants\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"] ,
+    ["neato\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"]
+  ]
+}
+```
+
+- VS Code를 완전히 재시작해야 적용됩니다.
+- Tailwind CSS IntelliSense 확장이 설치되어 있어야 합니다.
+
 ## 🚀 빠른 시작
 
 ### 기본 사용법

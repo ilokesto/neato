@@ -1,10 +1,3 @@
-/**
- * Neato Theme Script
- * FOUC prevention script for server-side rendering
- * 
- * @package neato
- * @author ilokesto
- */
 
 // FOUC 방지를 위한 인라인 스크립트 (Neato Theme)
 // 이 함수는 컴포넌트가 아닌 순수 문자열 생성용입니다.

@@ -2,7 +2,7 @@
 
 **Language** : English | [한국어](./README.md)
 
-> A powerful utility library for efficient CSS class management in React applications
+> Complete styling solution for Tailwind CSS - Everything from class management to themes, all in one
 
 [![npm version](https://badge.fury.io/js/neato.svg)](https://badge.fury.io/js/neato)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)

@@ -2,7 +2,7 @@
 
 **Language** : [English](./README_EN.md) | 한국어
 
-> React 애플리케이션에서 효율적인 CSS 클래스 관리를 위한 강력한 유틸리티 라이브러리
+> Tailwind CSS를 위한 완전한 스타일링 솔루션 - 클래스 관리부터 테마까지 모든 것을 하나로
 
 [![npm version](https://badge.fury.io/js/neato.svg)](https://badge.fury.io/js/neato)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)

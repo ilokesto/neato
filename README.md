@@ -15,6 +15,7 @@
 - 🎨 **Variants 시스템** - 타입 안전성을 갖춘 강력한 조건부 스타일링
 - 🧩 **Compound Variants** - 여러 조건에 기반한 복잡한 스타일링
 - 📱 **Multi-slot 지원** - 컴포넌트의 여러 부분을 독립적으로 스타일링
+- 🌓 **테마 시스템** - Light/Dark/System 테마를 지원하는 완전한 테마 관리
 - 🚀 **TypeScript 우선** - 완전한 타입 안전성과 IntelliSense
 - 📦 **경량** - 런타임 오버헤드 없이 최소 번들 크기
 - ⚡ **빠름** - 성능에 최적화
@@ -118,6 +119,154 @@ function Button({ variant, size, className, ...props }) {
 // IntelliSense와 함께 완전한 타입 지원
 <Button variant="secondary" size="lg" />
 ```
+
+## 🌓 테마 시스템
+
+neato는 React 애플리케이션에서 쉽게 사용할 수 있는 완전한 테마 관리 시스템을 제공합니다.
+
+### 기본 설정
+
+```typescript
+import { NeatoThemeProvider, createNeatoThemeScript } from 'neato';
+
+// 1. 앱 최상단에 Provider 설정
+function App() {
+  return (
+    <NeatoThemeProvider>
+      <YourComponents />
+    </NeatoThemeProvider>
+  );
+}
+
+// 2. FOUC 방지를 위해 HTML head에 스크립트 추가 (Next.js 예시)
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <head>
+        <script 
+          dangerouslySetInnerHTML={{ 
+            __html: createNeatoThemeScript() 
+          }} 
+        />
+      </head>
+      <body>
+        <NeatoThemeProvider>
+          {children}
+        </NeatoThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### 테마 사용법
+
+```typescript
+import { useNeatoTheme } from 'neato';
+
+function ThemeToggle() {
+  const { theme, setTheme, effectiveTheme, isHydrated } = useNeatoTheme();
+
+  return (
+    <div>
+      <button onClick={() => setTheme('light')}>
+        라이트 모드
+      </button>
+      <button onClick={() => setTheme('dark')}>
+        다크 모드
+      </button>
+      <button onClick={() => setTheme('system')}>
+        시스템 설정
+      </button>
+      
+      <p>현재 테마: {theme}</p>
+      <p>적용된 테마: {effectiveTheme}</p>
+    </div>
+  );
+}
+```
+
+### 테마별 스타일링
+
+```typescript
+// Tailwind CSS의 dark: modifier와 함께 사용
+const cardStyles = neatoVariants({
+  base: 'p-6 rounded-lg border transition-colors',
+  variants: {
+    variant: {
+      default: 'bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700',
+      elevated: 'bg-white border-gray-200 shadow-lg dark:bg-gray-800 dark:border-gray-700'
+    }
+  }
+});
+
+function Card({ variant = 'default', children }) {
+  return (
+    <div className={cardStyles({ variant })}>
+      {children}
+    </div>
+  );
+}
+```
+
+### 고급 테마 토글 컴포넌트
+
+```typescript
+import { useNeatoTheme } from 'neato';
+
+function AdvancedThemeToggle() {
+  const { theme, setTheme, effectiveTheme } = useNeatoTheme();
+
+  const cycleTheme = () => {
+    if (theme === 'light') setTheme('dark');
+    else if (theme === 'dark') setTheme('system');
+    else setTheme('light');
+  };
+
+  const getIcon = () => {
+    if (theme === 'system') return '🌓';
+    return effectiveTheme === 'dark' ? '🌙' : '☀️';
+  };
+
+  const getLabel = () => {
+    if (theme === 'system') return '시스템';
+    return theme === 'dark' ? '다크' : '라이트';
+  };
+
+  return (
+    <button 
+      onClick={cycleTheme}
+      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+    >
+      <span>{getIcon()}</span>
+      <span>{getLabel()}</span>
+    </button>
+  );
+}
+```
+
+### 테마 API
+
+#### `useNeatoTheme()`
+
+테마 상태와 제어 함수를 반환합니다.
+
+- `theme`: 현재 설정된 테마 (`'light' | 'dark' | 'system'`)
+- `setTheme`: 테마를 변경하는 함수
+- `effectiveTheme`: 실제로 적용된 테마 (`'light' | 'dark'`)
+- `isHydrated`: 클라이언트 하이드레이션 완료 여부
+
+#### `createNeatoThemeScript()`
+
+FOUC(Flash of Unstyled Content) 방지를 위한 인라인 스크립트 문자열을 생성합니다.
+
+### 특징
+
+- ✅ **자동 시스템 테마 감지** - `prefers-color-scheme` 미디어 쿼리 지원
+- ✅ **LocalStorage 연동** - 설정 자동 저장 및 복원
+- ✅ **SSR 안전** - 서버 사이드 렌더링과 하이드레이션 안전
+- ✅ **FOUC 방지** - 페이지 로드 시 깜빡임 없음
+- ✅ **TypeScript 지원** - 완전한 타입 안전성
 
 ## 📚 API 레퍼런스
 

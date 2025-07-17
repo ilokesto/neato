@@ -6,16 +6,19 @@ import type { ClassValue } from './utils';
 
 export type VariantProps = Record<string, string | number | boolean | undefined>;
 
+// Tailwind CSS class type for better IntelliSense
+export type TailwindClass = string;
+
 export type VariantConfig<T extends VariantProps> = {
-  [K in keyof T]?: Record<string, string>;
+  [K in keyof T]?: Record<string, TailwindClass>;
 };
 
 export type CompoundVariant<T extends VariantProps> = Partial<T> & {
-  className: string;
+  className: TailwindClass;
 };
 
 export interface VariantsConfig<T extends VariantProps> {
-  base?: string;
+  base?: TailwindClass;
   variants?: VariantConfig<T>;
   compoundVariants?: CompoundVariant<T>[];
   defaultVariants?: Partial<T>;

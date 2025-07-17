@@ -5,11 +5,30 @@
 import type { VariantProps, VariantsConfig } from './types';
 import { mergeClasses, resolveTailwindConflicts } from './utils';
 
+/**
+ * Creates a variant function for conditional styling with Tailwind CSS classes.
+ * 
+ * @example
+ * ```typescript
+ * const button = neatoVariants({
+ *   base: "px-4 py-2 rounded-md font-medium",
+ *   variants: {
+ *     variant: {
+ *       primary: "bg-blue-500 text-white",
+ *       secondary: "bg-gray-200 text-gray-900"
+ *     }
+ *   }
+ * });
+ * ```
+ */
 // Single component overload
 export function neatoVariants<T extends VariantProps>(
   config: VariantsConfig<T>
 ): (props?: Partial<T> & { className?: string }) => string;
 
+/**
+ * Creates variant functions for multi-slot components with Tailwind CSS classes.
+ */
 // Multi-slot component overload  
 export function neatoVariants<T extends Record<string, VariantProps>>(
   config: { [K in keyof T]: VariantsConfig<T[K]> }

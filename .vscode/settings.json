@@ -1,0 +1,10 @@
+{
+  "tailwindCSS.experimental.classRegex": [
+    ["neatoVariants\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"],
+    ["neato\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]"]
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  }
+}

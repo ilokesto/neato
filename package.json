@@ -1,28 +1,60 @@
 {
   "name": "neato",
   "version": "0.0.2",
-  "types": "dist/index.d.ts",
-  "module": "dist/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "vite build && tsc --emitDeclarationOnly"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ayden94/neato"
-  },
-  "keywords": [],
+  "description": "A powerful utility library for efficient CSS class management in React applications",
+  "keywords": [
+    "css",
+    "tailwind",
+    "classnames",
+    "utility",
+    "variants",
+    "react",
+    "typescript",
+    "styling"
+  ],
   "author": "Jeong Jinho <wpfekdml@me.com>",
   "license": "MIT",
-  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilokesto/neato.git"
+  },
+  "homepage": "https://github.com/ilokesto/neato#readme",
+  "bugs": {
+    "url": "https://github.com/ilokesto/neato/issues"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.1"
+  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.34.1",
     "@typescript-eslint/parser": "^8.34.1",
     "eslint": "^9.29.0",
     "typescript": "^5.8.3"
   },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.3.1"
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }

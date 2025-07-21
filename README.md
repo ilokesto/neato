@@ -392,28 +392,22 @@ const className = styles({ variantName: 'option2' });
 #### Multi-slot 컴포넌트 모드
 
 ```typescript
-const styles = neatoVariants({
-  container: {
-    base: 'container-classes',
-    variants: { /* ... */ }
+const multi = neatoVariants({
+  icon: {
+    base: 'w-4 h-4',
+    variants: { color: { red: 'text-red-500', blue: 'text-blue-500' } }
   },
-  header: {
-    base: 'header-classes',
-    variants: { /* ... */ }
-  },
-  content: {
-    base: 'content-classes',
-    variants: { /* ... */ }
+  label: {
+    base: 'font-bold',
+    variants: { size: { sm: 'text-sm', lg: 'text-lg' } }
   }
 });
 
-// 반환값: { container: string, header: string, content: string }
-const classes = styles({
-  container: { variant: 'primary' },
-  header: { size: 'lg' },
-  content: { padding: 'loose' }
-});
+// 각 슬롯별로 함수로 접근
+multi.icon({ color: 'red' }); // "w-4 h-4 text-red-500"
+multi.label({ size: 'lg', className: 'underline' }); // "font-bold text-lg underline"
 ```
+이제 멀티 슬롯 컴포넌트에서 각 부분별 스타일을 독립적으로 사용할 수 있습니다.
 
 ## 🎯 실제 사용 예시
 

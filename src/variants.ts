@@ -13,16 +13,13 @@ export function neatoVariants<T extends Record<string, VariantProps>>(
 export function neatoVariants(config: any): any {
   const isMultiSlot = !('base' in config || 'variants' in config || 'compoundVariants' in config || 'defaultVariants' in config);
   if (isMultiSlot) {
-    return (props: any = {}) => {
-      const result: Record<string, string> = {};
-      for (const slotName of Object.keys(config)) {
-        const slotConfig = config[slotName];
-        const slotProps = props[slotName];
-        const slotVariants = neatoVariants(slotConfig);
-        result[slotName] = slotVariants(slotProps);
-      }
-      return result;
-    };
+    // 각 슬롯별로 함수 반환
+    const result: Record<string, (props?: any) => string> = {};
+    for (const slotName of Object.keys(config)) {
+      const slotConfig = config[slotName];
+      result[slotName] = neatoVariants(slotConfig);
+    }
+    return result;
   }
   return (props: any = {}) => {
     const { base = '', variants = {}, compoundVariants = [], defaultVariants = {} } = config;

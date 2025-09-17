@@ -1,24 +1,28 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 
-export type NeatoTheme = "light" | "dark" | "system";
+export type Theme = "light" | "dark" | "system";
 
-interface NeatoThemeContextType {
-  theme: NeatoTheme;
-  setTheme: (theme: NeatoTheme) => void;
+interface ThemeContextType {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
   effectiveTheme: "light" | "dark";
   isHydrated: boolean;
 }
 
-const NeatoThemeContext = createContext<NeatoThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function NeatoThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<NeatoTheme>("system");
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>("system");
   const [effectiveTheme, setEffectiveTheme] = useState<"light" | "dark">(
     "light"
   );
   const [isHydrated, setIsHydrated] = useState(false);
+  const transitionTimeoutRef = useRef<number | null>(null);
+
+  const TRANSITION_CLASS = "theme-transition";
+  const TRANSITION_STYLE_ID = "metheus-theme-transition-style";
 
   // 클라이언트 하이드레이션 완료 후 실행
   useEffect(() => {
@@ -34,6 +38,22 @@ export function NeatoThemeProvider({ children }: { children: React.ReactNode }) 
     const currentlyDark = document.documentElement.classList.contains("dark");
     setEffectiveTheme(currentlyDark ? "dark" : "light");
   }, []); // 시스템 다크모드 감지 및 테마 적용
+
+  // 문서에 전환용 CSS를 한 번 삽입
+  useEffect(() => {
+    try {
+      if (typeof document === "undefined") return;
+      if (!document.getElementById(TRANSITION_STYLE_ID)) {
+        const style = document.createElement("style");
+        style.id = TRANSITION_STYLE_ID;
+        // 최소한의 안전한 속성만 전환합니다. 너무 많은 속성을 전환하면 성능에 영향이 있습니다.
+        style.innerHTML = `html.${TRANSITION_CLASS}, html.${TRANSITION_CLASS} * { transition: background-color 200ms linear, color 200ms linear, border-color 200ms linear, box-shadow 200ms linear, fill 200ms linear, stroke 200ms linear !important; }`;
+        document.head.appendChild(style);
+      }
+    } catch (e) {
+      // 삽입 실패 시 무시
+    }
+  }, []);
   useEffect(() => {
     if (!isHydrated) return;
 
@@ -85,19 +105,44 @@ export function NeatoThemeProvider({ children }: { children: React.ReactNode }) 
     }
   }, [theme, effectiveTheme, isHydrated]);
 
+  // 사용자 호출용 setTheme: 토글할 때만 임시 transition 클래스를 추가
+  const setTheme = (newTheme: Theme) => {
+    try {
+      const html = document.documentElement;
+
+      // transition 클래스 추가
+      html.classList.add(TRANSITION_CLASS);
+
+      // 이전 타이머가 있으면 제거
+      if (transitionTimeoutRef.current) {
+        window.clearTimeout(transitionTimeoutRef.current);
+      }
+
+      // 250ms 이후에 transition 클래스 제거
+      transitionTimeoutRef.current = window.setTimeout(() => {
+        html.classList.remove(TRANSITION_CLASS);
+        transitionTimeoutRef.current = null;
+      }, 250);
+    } catch (e) {
+      // DOM 접근 실패 시 그냥 계속
+    }
+
+    setThemeState(newTheme);
+  };
+
   return (
-    <NeatoThemeContext.Provider
+    <ThemeContext.Provider
       value={{ theme, setTheme, effectiveTheme, isHydrated }}
     >
       {children}
-    </NeatoThemeContext.Provider>
+    </ThemeContext.Provider>
   );
 }
 
-export function useNeatoTheme() {
-  const context = useContext(NeatoThemeContext);
+export function useTheme() {
+  const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error("useNeatoTheme must be used within a NeatoThemeProvider");
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 }

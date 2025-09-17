@@ -12,6 +12,9 @@
     "typescript",
     "styling"
   ],
+  "bin": {
+    "neato": "dist/cli.js"
+  },
   "author": "Jeong Jinho <wpfekdml@me.com>",
   "license": "MIT",
   "repository": {
@@ -61,7 +64,9 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
+    "@types/node": "^24.5.1",
     "clsx": "^2.1.1",
+    "commander": "^14.0.1",
     "tailwind-merge": "^3.3.1"
   }
 }

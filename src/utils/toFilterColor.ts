@@ -174,10 +174,10 @@ class Solver {
       loss: Infinity,
       filter: '',
     };
-    const MAX_ATTEMPTS = 20; // Define a maximum number of attempts to prevent infinite loops
+
     let attempts = 0;
 
-    while (bestResult.loss >= 5.0 && attempts < MAX_ATTEMPTS) {
+    while (bestResult.loss >= 3.0) {
       const wideResult = this.solveWide();
       const narrowResult = this.solveNarrow(wideResult);
       const currentResult = {

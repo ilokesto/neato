@@ -1,5 +1,3 @@
-"use client";
-
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 
 export type Theme = "light" | "dark" | "system";
@@ -13,7 +11,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+export function NeatoThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("system");
   const [effectiveTheme, setEffectiveTheme] = useState<"light" | "dark">(
     "light"
@@ -22,7 +20,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const transitionTimeoutRef = useRef<number | null>(null);
 
   const TRANSITION_CLASS = "theme-transition";
-  const TRANSITION_STYLE_ID = "metheus-theme-transition-style";
+  const TRANSITION_STYLE_ID = "theme-transition-style";
 
   // 클라이언트 하이드레이션 완료 후 실행
   useEffect(() => {

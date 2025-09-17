@@ -50,17 +50,25 @@ program
       try {
         if (index > 0) console.log('---'); // Add a separator
         console.log(`Input Color: #${color}`);
-        
-        // 1. Convert to dark mode
+
+        // Calculate filter for original color (Light Filter)
+        const { filter: lightFilter, loss: lightLoss } = toFilterColor(color);
+        console.log(`Light Filter: ${lightFilter}`);
+        console.log(`Light Filter Loss: ${lightLoss.toFixed(2)}`);
+        if (lightLoss > 10) {
+          console.warn('Warning (Light Filter): The color is somewhat off. The result may not be perfect.');
+        }
+
+        // Convert to dark mode
         const darkModeColor = toDarkModeColor(color);
         console.log(`Dark Mode Color: #${darkModeColor}`);
 
-        // 2. Convert dark mode color to filter
-        const { filter, loss } = toFilterColor(darkModeColor); // Remove # from hex
-        console.log(`Filter: ${filter}`);
-        console.log(`Loss: ${loss.toFixed(2)}`);
-        if (loss > 10) {
-          console.warn('Warning: The color is somewhat off. The result may not be perfect.');
+        // Calculate filter for dark mode color (Dark Filter)
+        const { filter: darkFilter, loss: darkLoss } = toFilterColor(darkModeColor);
+        console.log(`Dark Filter: ${darkFilter}`);
+        console.log(`Dark Filter Loss: ${darkLoss.toFixed(2)}`);
+        if (darkLoss > 10) {
+          console.warn('Warning (Dark Filter): The color is somewhat off. The result may not be perfect.');
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : 'An unknown error occurred';

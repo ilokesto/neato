@@ -16,6 +16,7 @@
 - 🧩 **Compound Variants** - Complex styling based on multiple conditions
 - 📱 **Multi-slot Support** - Style multiple component parts independently
 - 🌓 **Theme System** - Complete theme management with Light/Dark/System support
+- 🎨 **Color Utilities** - Dark mode color conversion and CSS filter generation CLI tools
 - 🚀 **TypeScript First** - Complete type safety and IntelliSense
 - 📦 **Lightweight** - Minimal bundle size with zero runtime overhead
 - ⚡ **Fast** - Optimized for performance
@@ -24,14 +25,54 @@
 
 ```bash
 npm install neato
-```
-
-```bash
 yarn add neato
+pnpm add neato
 ```
 
+## 🎨 CLI Color Utilities
+
+neato includes powerful CLI tools for color conversion.
+
+### Dark Mode Color Conversion
+
+Automatically convert light mode colors to dark mode suitable colors:
+
 ```bash
-pnpm add neato
+npx neato toDark 3b82f6 ef4444 10b981
+# Output:
+# #4d5fb8
+# #b83c3c
+# #0d8a5f
+```
+
+### CSS Filter Generation
+
+Calculate CSS filters to achieve desired colors:
+
+```bash
+npx neato toFilter 3b82f6
+# Output:
+# Input Color: #3b82f6
+# Filter: filter: invert(32%) sepia(77%) saturate(2815%) hue-rotate(217deg) brightness(101%) contrast(101%);
+# Loss: 0.89
+```
+
+### Dark Mode + Filter Conversion Pipeline
+
+Convert colors to dark mode and then generate CSS filters:
+
+```bash
+npx neato toDarkFilter 3b82f6
+# Output:
+# Input Color: #3b82f6
+# Light Filter: filter: invert(32%) sepia(77%) saturate(2815%) hue-rotate(217deg) brightness(101%) contrast(101%);
+# Light Filter Loss: 0.89
+# Dark Mode Color: #4d5fb8
+# Dark Filter: filter: invert(36%) sepia(41%) saturate(1042%) hue-rotate(211deg) brightness(95%) contrast(96%);
+# Dark Filter Loss: 1.23
+```
+
+These CLI tools are particularly useful for building consistent color palettes in design systems and applying dynamic colors to icons or SVG elements.
 ```
 
 ## 🛠️ Tailwind CSS IntelliSense Integration
@@ -126,15 +167,15 @@ neato provides a complete theme management system that's easy to use in React ap
 ### Basic Setup
 
 ```typescript
-import { NeatoThemeProvider } from 'neato/theme';
+import { ThemeProvider } from 'neato/theme';
 import { createNeatoThemeScript } from 'neato/theme-script';
 
 // 1. Set up Provider at the app root
 function App() {
   return (
-    <NeatoThemeProvider>
+    <ThemeProvider>
       <YourComponents />
-    </NeatoThemeProvider>
+    </ThemeProvider>
   );
 }
 
@@ -150,9 +191,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <NeatoThemeProvider>
+        <ThemeProvider>
           {children}
-        </NeatoThemeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
@@ -196,10 +237,10 @@ module.exports = {
 ### Theme Usage
 
 ```typescript
-import { useNeatoTheme } from 'neato';
+import { useTheme } from 'neato/theme';
 
 function ThemeToggle() {
-  const { theme, setTheme, effectiveTheme, isHydrated } = useNeatoTheme();
+  const { theme, setTheme, effectiveTheme, isHydrated } = useTheme();
 
   return (
     <div>
@@ -246,10 +287,10 @@ function Card({ variant = 'default', children }) {
 ### Advanced Theme Toggle Component
 
 ```typescript
-import { useNeatoTheme } from 'neato';
+import { useTheme } from 'neato/theme';
 
 function AdvancedThemeToggle() {
-  const { theme, setTheme, effectiveTheme } = useNeatoTheme();
+  const { theme, setTheme, effectiveTheme } = useTheme();
 
   const cycleTheme = () => {
     if (theme === 'light') setTheme('dark');
@@ -281,7 +322,7 @@ function AdvancedThemeToggle() {
 
 ### Theme API
 
-#### `useNeatoTheme()`
+#### `useTheme()`
 
 Returns theme state and control functions.
 
@@ -308,7 +349,7 @@ Returns theme state and control functions.
 ```typescript
 // Practical usage example
 function ThemeStatus() {
-  const { theme, setTheme, effectiveTheme, isHydrated } = useNeatoTheme();
+  const { theme, setTheme, effectiveTheme, isHydrated } = useTheme();
 
   if (!isHydrated) {
     return <div>Loading...</div>; // Before hydration
@@ -391,27 +432,31 @@ const className = styles({ variantName: 'option2' });
 #### Multi-slot Component Mode
 
 ```typescript
-const styles = neatoVariants({
+const cardStyles = neatoVariants({
   container: {
-    base: 'container-classes',
-    variants: { /* ... */ }
+    base: 'rounded-lg border bg-white shadow-sm',
+    variants: {
+      size: { sm: 'p-4', md: 'p-6', lg: 'p-8' }
+    }
   },
   header: {
-    base: 'header-classes',
-    variants: { /* ... */ }
+    base: 'border-b pb-4 mb-4',
+    variants: {
+      align: { left: 'text-left', center: 'text-center', right: 'text-right' }
+    }
   },
   content: {
-    base: 'content-classes',
-    variants: { /* ... */ }
+    base: 'text-gray-700',
+    variants: {
+      spacing: { tight: 'space-y-2', normal: 'space-y-4', loose: 'space-y-6' }
+    }
   }
 });
 
-// Returns: { container: string, header: string, content: string }
-const classes = styles({
-  container: { variant: 'primary' },
-  header: { size: 'lg' },
-  content: { padding: 'loose' }
-});
+// Access each slot via function
+cardStyles.container({ size: 'lg' }); // "rounded-lg border bg-white shadow-sm p-8"
+cardStyles.header({ align: 'center', className: 'font-bold' }); // "border-b pb-4 mb-4 text-center font-bold"
+cardStyles.content({ spacing: 'loose' }); // "text-gray-700 space-y-6"
 ```
 
 ## 🎯 Real-world Examples

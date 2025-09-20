@@ -16,6 +16,7 @@
 - 🧩 **Compound Variants** - 여러 조건에 기반한 복잡한 스타일링
 - 📱 **Multi-slot 지원** - 컴포넌트의 여러 부분을 독립적으로 스타일링
 - 🌓 **테마 시스템** - Light/Dark/System 테마를 지원하는 완전한 테마 관리
+- 🎨 **색상 유틸리티** - 다크모드 색상 변환 및 CSS 필터 생성 CLI 도구
 - 🚀 **TypeScript 우선** - 완전한 타입 안전성과 IntelliSense
 - 📦 **경량** - 런타임 오버헤드 없이 최소 번들 크기
 - ⚡ **빠름** - 성능에 최적화
@@ -24,14 +25,54 @@
 
 ```bash
 npm install neato
-```
-
-```bash
 yarn add neato
+pnpm add neato
 ```
 
+## 🎨 CLI 색상 유틸리티
+
+neato는 색상 변환을 위한 강력한 CLI 도구를 포함하고 있습니다.
+
+### 다크모드 색상 변환
+
+라이트모드 색상을 다크모드에 적합한 색상으로 자동 변환:
+
 ```bash
-pnpm add neato
+npx neato toDark 3b82f6 ef4444 10b981
+# 출력:
+# #4d5fb8
+# #b83c3c
+# #0d8a5f
+```
+
+### CSS 필터 생성
+
+원하는 색상을 구현하는 CSS 필터를 계산:
+
+```bash
+npx neato toFilter 3b82f6
+# 출력:
+# Input Color: #3b82f6
+# Filter: filter: invert(32%) sepia(77%) saturate(2815%) hue-rotate(217deg) brightness(101%) contrast(101%);
+# Loss: 0.89
+```
+
+### 다크모드 + 필터 변환 파이프라인
+
+색상을 다크모드로 변환한 후 CSS 필터까지 생성:
+
+```bash
+npx neato toDarkFilter 3b82f6
+# 출력:
+# Input Color: #3b82f6
+# Light Filter: filter: invert(32%) sepia(77%) saturate(2815%) hue-rotate(217deg) brightness(101%) contrast(101%);
+# Light Filter Loss: 0.89
+# Dark Mode Color: #4d5fb8
+# Dark Filter: filter: invert(36%) sepia(41%) saturate(1042%) hue-rotate(211deg) brightness(95%) contrast(96%);
+# Dark Filter Loss: 1.23
+```
+
+이러한 CLI 도구들은 디자인 시스템에서 일관된 색상 팔레트를 구축하고, 아이콘이나 SVG 요소에 동적 색상을 적용할 때 특히 유용합니다.
 ```
 
 
@@ -127,15 +168,15 @@ neato는 React 애플리케이션에서 쉽게 사용할 수 있는 완전한 �
 ### 기본 설정
 
 ```typescript
-import { NeatoThemeProvider } from 'neato/theme';
+import { ThemeProvider } from 'neato/theme';
 import { createNeatoThemeScript } from 'neato/theme-script';
 
 // 1. 앱 최상단에 Provider 설정
 function App() {
   return (
-    <NeatoThemeProvider>
+    <ThemeProvider>
       <YourComponents />
-    </NeatoThemeProvider>
+    </ThemeProvider>
   );
 }
 
@@ -151,9 +192,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <NeatoThemeProvider>
+        <ThemeProvider>
           {children}
-        </NeatoThemeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
@@ -197,10 +238,10 @@ module.exports = {
 ### 테마 사용법
 
 ```typescript
-import { useNeatoTheme } from 'neato/theme';
+import { useTheme } from 'neato/theme';
 
 function ThemeToggle() {
-  const { theme, setTheme, effectiveTheme, isHydrated } = useNeatoTheme();
+  const { theme, setTheme, effectiveTheme, isHydrated } = useTheme();
 
   return (
     <div>
@@ -247,10 +288,10 @@ function Card({ variant = 'default', children }) {
 ### 고급 테마 토글 컴포넌트
 
 ```typescript
-import { useNeatoTheme } from 'neato/theme';
+import { useTheme } from 'neato/theme';
 
 function AdvancedThemeToggle() {
-  const { theme, setTheme, effectiveTheme } = useNeatoTheme();
+  const { theme, setTheme, effectiveTheme } = useTheme();
 
   const cycleTheme = () => {
     if (theme === 'light') setTheme('dark');
@@ -282,7 +323,7 @@ function AdvancedThemeToggle() {
 
 ### 테마 API
 
-#### `useNeatoTheme()`
+#### `useTheme()`
 
 테마 상태와 제어 함수를 반환합니다.
 
@@ -309,7 +350,7 @@ function AdvancedThemeToggle() {
 ```typescript
 // 실제 사용 예시
 function ThemeStatus() {
-  const { theme, setTheme, effectiveTheme, isHydrated } = useNeatoTheme();
+  const { theme, setTheme, effectiveTheme, isHydrated } = useTheme();
 
   if (!isHydrated) {
     return <div>로딩 중...</div>; // 하이드레이션 전
@@ -392,20 +433,31 @@ const className = styles({ variantName: 'option2' });
 #### Multi-slot 컴포넌트 모드
 
 ```typescript
-const multi = neatoVariants({
-  icon: {
-    base: 'w-4 h-4',
-    variants: { color: { red: 'text-red-500', blue: 'text-blue-500' } }
+const cardStyles = neatoVariants({
+  container: {
+    base: 'rounded-lg border bg-white shadow-sm',
+    variants: {
+      size: { sm: 'p-4', md: 'p-6', lg: 'p-8' }
+    }
   },
-  label: {
-    base: 'font-bold',
-    variants: { size: { sm: 'text-sm', lg: 'text-lg' } }
+  header: {
+    base: 'border-b pb-4 mb-4',
+    variants: {
+      align: { left: 'text-left', center: 'text-center', right: 'text-right' }
+    }
+  },
+  content: {
+    base: 'text-gray-700',
+    variants: {
+      spacing: { tight: 'space-y-2', normal: 'space-y-4', loose: 'space-y-6' }
+    }
   }
 });
 
 // 각 슬롯별로 함수로 접근
-multi.icon({ color: 'red' }); // "w-4 h-4 text-red-500"
-multi.label({ size: 'lg', className: 'underline' }); // "font-bold text-lg underline"
+cardStyles.container({ size: 'lg' }); // "rounded-lg border bg-white shadow-sm p-8"
+cardStyles.header({ align: 'center', className: 'font-bold' }); // "border-b pb-4 mb-4 text-center font-bold"
+cardStyles.content({ spacing: 'loose' }); // "text-gray-700 space-y-6"
 ```
 이제 멀티 슬롯 컴포넌트에서 각 부분별 스타일을 독립적으로 사용할 수 있습니다.
 
@@ -482,18 +534,12 @@ const cardStyles = neatoVariants({
 });
 
 function Card({ size, headerAlign, contentSpacing, title, children }) {
-  const styles = cardStyles({
-    container: { size },
-    header: { align: headerAlign },
-    content: { spacing: contentSpacing }
-  });
-
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
+    <div className={cardStyles.container({ size })}>
+      <header className={cardStyles.header({ align: headerAlign })}>
         <h3>{title}</h3>
       </header>
-      <div className={styles.content}>
+      <div className={cardStyles.content({ spacing: contentSpacing })}>
         {children}
       </div>
     </div>

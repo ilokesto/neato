@@ -168,7 +168,7 @@ neato provides a complete theme management system that's easy to use in React ap
 
 ```typescript
 import { ThemeProvider } from 'neato/theme';
-import { createNeatoThemeScript } from 'neato/theme-script';
+import { createThemeScript } from 'neato/theme-script';
 
 // 1. Set up Provider at the app root
 function App() {
@@ -186,7 +186,7 @@ export default function RootLayout({ children }) {
       <head>
         <script 
           dangerouslySetInnerHTML={{ 
-            __html: createNeatoThemeScript() 
+            __html: createThemeScript() 
           }} 
         />
       </head>
@@ -369,7 +369,7 @@ function ThemeStatus() {
 }
 ```
 
-#### `createNeatoThemeScript()`
+#### `createThemeScript()`
 
 Generates an inline script string to prevent FOUC (Flash of Unstyled Content).
 

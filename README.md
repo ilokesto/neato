@@ -169,7 +169,7 @@ neato는 React 애플리케이션에서 쉽게 사용할 수 있는 완전한 �
 
 ```typescript
 import { ThemeProvider } from 'neato/theme';
-import { createNeatoThemeScript } from 'neato/theme-script';
+import { createThemeScript } from 'neato/theme-script';
 
 // 1. 앱 최상단에 Provider 설정
 function App() {
@@ -187,7 +187,7 @@ export default function RootLayout({ children }) {
       <head>
         <script 
           dangerouslySetInnerHTML={{ 
-            __html: createNeatoThemeScript() 
+            __html: createThemeScript() 
           }} 
         />
       </head>
@@ -370,7 +370,7 @@ function ThemeStatus() {
 }
 ```
 
-#### `createNeatoThemeScript()`
+#### `createThemeScript()`
 
 FOUC(Flash of Unstyled Content) 방지를 위한 인라인 스크립트 문자열을 생성합니다.
 

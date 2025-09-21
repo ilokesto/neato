@@ -1,13 +1,13 @@
 
 // FOUC 방지를 위한 인라인 스크립트 (Neato Theme)
 // 이 함수는 컴포넌트가 아닌 순수 문자열 생성용입니다.
-export function createNeatoThemeScript(): string {
+export function createThemeScript(): string {
   return `
     (function () {
       try {
         var theme = localStorage.getItem('theme');
         var isDark = false;
-        
+
         if (theme === 'dark') {
           isDark = true;
         } else if (theme === 'light') {

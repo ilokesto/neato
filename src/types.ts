@@ -1,4 +1,3 @@
-
 export type VariantProps = Record<string, string | number | boolean | undefined>;
 export type VariantConfig<T extends VariantProps> = {
   [K in keyof T]?: Record<string, string>;
@@ -10,3 +9,5 @@ export interface VariantsConfig<T extends VariantProps> {
   compoundVariants?: CompoundVariant<T>[];
   defaultVariants?: Partial<T>;
 }
+
+export type Theme = "light" | "dark" | "system";

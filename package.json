@@ -33,12 +33,12 @@
       "types": "./dist/index.d.ts"
     },
     "./theme": {
-      "import": "./dist/theme.js",
-      "types": "./dist/theme.d.ts"
+      "import": "./dist/theme/index.js",
+      "types": "./dist/theme/index.d.ts"
     },
-    "./theme-script": {
-      "import": "./dist/theme-script.js",
-      "types": "./dist/theme-script.d.ts"
+    "./theme/script": {
+      "import": "./dist/theme/theme-script.js",
+      "types": "./dist/theme/theme-script.d.ts"
     }
   },
   "files": [
@@ -46,7 +46,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "dev": "tsc --watch"
   },
   "devDependencies": {

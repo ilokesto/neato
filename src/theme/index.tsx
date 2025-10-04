@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
 import { Theme } from "../types";
 import { useEffectiveTheme } from "./useEffectiveTheme";
 import { useThemeDOMEffect } from "./useThemeDOMEffect";
@@ -8,7 +8,7 @@ import { useThemeTransitionStyle } from "./useThemeTransitionStyle";
 
 interface ThemeContextType {
   theme: Theme;
-  setTheme: (theme: Theme) => void;
+  setTheme: Dispatch<SetStateAction<Theme>>;
   effectiveTheme: "light" | "dark";
   isHydrated: boolean;
 }

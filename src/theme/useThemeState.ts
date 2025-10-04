@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { SetStateAction, useRef, useState } from "react";
 import { Theme } from "../types";
 import { TRANSITION_CLASS } from "./constants";
 
@@ -6,7 +6,7 @@ export function useThemeState() {
   const [theme, setThemeState] = useState<Theme>("system");
   const transitionTimeoutRef = useRef<number | null>(null);
 
-  const setTheme = (newTheme: Theme) => {
+  const setTheme = (newTheme: SetStateAction<Theme>) => {
     try {
       const html = document.documentElement;
 

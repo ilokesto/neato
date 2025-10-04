@@ -16,27 +16,41 @@
 export function preventThemeFlash(): () => void {
   if (typeof window === "undefined") return () => {};
 
-  // 페이지 로드 시 transition을 일시적으로 비활성화
+  // 페이지 로드 시 transition과 animation을 완전히 비활성화
   const style = document.createElement("style");
   style.id = "prevent-theme-flash";
-  style.textContent = "* { transition: none !important; }";
+  style.textContent = `
+    *, *::before, *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+  `;
   document.head.appendChild(style);
 
-  // DOM이 완전히 로드되고 첫 페인트가 끝난 후 transition 활성화
-  const timeoutId = window.setTimeout(() => {
-    style.remove();
-  }, 100); // 100ms로 증가하여 Next.js 클라이언트 사이드 네비게이션도 커버
+  // 여러 타이밍에 제거를 시도하여 모든 경우를 커버
+  const timeouts: number[] = [];
+  const rafs: number[] = [];
 
-  // requestAnimationFrame을 사용하여 더 정확한 타이밍 보장
-  const rafId = requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      style.remove();
+  // RAF 체인으로 페인트 후에 제거
+  const raf1 = requestAnimationFrame(() => {
+    const raf2 = requestAnimationFrame(() => {
+      const raf3 = requestAnimationFrame(() => {
+        style.remove();
+      });
+      rafs.push(raf3);
     });
+    rafs.push(raf2);
   });
+  rafs.push(raf1);
+
+  // 백업: 일정 시간 후 강제 제거
+  timeouts.push(window.setTimeout(() => {
+    style.remove();
+  }, 150));
 
   return () => {
-    clearTimeout(timeoutId);
-    cancelAnimationFrame(rafId);
+    timeouts.forEach(clearTimeout);
+    rafs.forEach(cancelAnimationFrame);
     style.remove();
   };
 }

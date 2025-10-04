@@ -1,9 +1,18 @@
-import { SetStateAction, useRef, useState } from "react";
+import { create } from "@ilokesto/caro-kann";
+import { persist } from "@ilokesto/caro-kann/middleware";
+import { SetStateAction, useRef } from "react";
 import { Theme } from "../types";
 import { TRANSITION_CLASS } from "./constants";
 
+const useTheme = create(persist(
+  "system" as Theme, // default value
+  {
+    local: "theme",
+  }
+))
+
 export function useThemeState() {
-  const [theme, setThemeState] = useState<Theme>("system");
+  const [theme, setThemeState] = useTheme();
   const transitionTimeoutRef = useRef<number | null>(null);
 
   const setTheme = (newTheme: SetStateAction<Theme>) => {

@@ -3,7 +3,8 @@
  * 
  * - React 컴포넌트가 마운트되기 전에 실행되어야 합니다
  * - 로컬스토리지의 'theme' 키에서 저장된 테마를 읽습니다
- * - useInternalTheme의 persist 미들웨어가 사용하는 동일한 키('theme')를 사용합니다
+ * - useInternalTheme의 persist 미들웨어가 사용하는 동일한 형태를 파싱합니다
+ * - caro-kann의 persist는 {"state":"light","version":0} 형태로 저장합니다
  * - HTML의 <head>에 <script dangerouslySetInnerHTML={{ __html: createThemeScript() }} />로 추가하세요
  * 
  * @returns 인라인 실행될 JavaScript 코드 문자열
@@ -12,8 +13,20 @@ export function createThemeScript(): string {
   return `
     (function () {
       try {
-        var theme = localStorage.getItem('theme');
+        var themeData = localStorage.getItem('theme');
+        var theme = null;
         var isDark = false;
+
+        // caro-kann persist 형태 파싱: {"state":"light","version":0}
+        if (themeData) {
+          try {
+            var parsed = JSON.parse(themeData);
+            theme = parsed.state || parsed;
+          } catch (e) {
+            // JSON 파싱 실패 시 문자열로 사용 (하위 호환성)
+            theme = themeData;
+          }
+        }
 
         if (theme === 'dark') {
           isDark = true;

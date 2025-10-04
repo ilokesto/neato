@@ -1,6 +1,13 @@
-
-// FOUC 방지를 위한 인라인 스크립트 (Neato Theme)
-// 이 함수는 컴포넌트가 아닌 순수 문자열 생성용입니다.
+/**
+ * FOUC (Flash of Unstyled Content) 방지를 위한 인라인 스크립트
+ * 
+ * - React 컴포넌트가 마운트되기 전에 실행되어야 합니다
+ * - 로컬스토리지의 'theme' 키에서 저장된 테마를 읽습니다
+ * - useInternalTheme의 persist 미들웨어가 사용하는 동일한 키('theme')를 사용합니다
+ * - HTML의 <head>에 <script dangerouslySetInnerHTML={{ __html: createThemeScript() }} />로 추가하세요
+ * 
+ * @returns 인라인 실행될 JavaScript 코드 문자열
+ */
 export function createThemeScript(): string {
   return `
     (function () {

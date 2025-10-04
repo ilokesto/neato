@@ -1,24 +1,23 @@
 import { useEffect } from "react";
-import { Theme } from "../types";
+import { useEffectiveThemeState } from "./useEffectiveThemeState";
 
-export function useThemeHydration(
-  setTheme: (theme: Theme) => void,
-  setEffectiveTheme: (theme: "light" | "dark") => void,
-  setIsHydrated: (isHydrated: boolean) => void
-) {
+/**
+ * 테마 하이드레이션 훅
+ * - 클라이언트 사이드에서 초기 테마 상태를 설정
+ * - useInternalTheme의 persist 미들웨어가 자동으로 로컬스토리지에서 로드
+ * - DOM의 현재 상태를 읽어 effectiveTheme 초기화
+ */
+export function useThemeHydration() {
+  const [, setState] = useEffectiveThemeState();
+
   useEffect(() => {
-    // localStorage에서 테마 값 읽기
-    const saved = localStorage.getItem("theme");
-    if (saved === "light" || saved === "dark" || saved === "system") {
-      setTheme(saved as Theme);
-    }
-
-    // 현재 DOM 상태를 기준으로 초기 effectiveTheme 설정
+    // persist 미들웨어가 이미 로컬스토리지에서 theme을 로드했으므로
+    // 현재 DOM 상태를 기준으로 초기 effectiveTheme만 설정
     const currentlyDark = document.documentElement.classList.contains("dark");
-    setEffectiveTheme(currentlyDark ? "dark" : "light");
-
-    // 모든 초기값을 설정한 뒤에 hydration 플래그를 true로 설정합니다.
-    // 이 순서를 지키면 다른 effect들이 아직 오래된 theme 값으로 실행되는 것을 막을 수 있습니다.
-    setIsHydrated(true);
-  }, []);
+    
+    setState({
+      effectiveTheme: currentlyDark ? "dark" : "light",
+      isHydrated: true,
+    });
+  }, [setState]);
 }

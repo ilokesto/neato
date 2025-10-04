@@ -1,22 +1,30 @@
 import { useEffect } from "react";
 import { Theme } from "../types";
+import { useEffectiveThemeState } from "./useEffectiveThemeState";
 
-export function useEffectiveTheme(
-  theme: Theme,
-  isHydrated: boolean,
-  setEffectiveTheme: (theme: "light" | "dark") => void
-) {
+/**
+ * 실제 적용될 테마 계산 훅
+ * - theme이 "system"인 경우 시스템 테마를 감지
+ * - theme이 "light" 또는 "dark"인 경우 해당 값 사용
+ * - 시스템 테마 변경을 실시간으로 감지하여 effectiveTheme 업데이트
+ */
+export function useEffectiveTheme(theme: Theme) {
+  const [state, setState] = useEffectiveThemeState();
+
   useEffect(() => {
-    if (!isHydrated) return;
+    if (!state.isHydrated) return;
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const updateEffectiveTheme = () => {
-      if (theme === "system") {
-        setEffectiveTheme(mediaQuery.matches ? "dark" : "light");
-      } else {
-        setEffectiveTheme(theme);
-      }
+      const newEffectiveTheme = theme === "system" 
+        ? (mediaQuery.matches ? "dark" : "light")
+        : theme;
+
+      setState((prev) => ({
+        ...prev,
+        effectiveTheme: newEffectiveTheme,
+      }));
     };
 
     // 초기 설정
@@ -31,5 +39,5 @@ export function useEffectiveTheme(
 
     mediaQuery.addEventListener("change", handler);
     return () => mediaQuery.removeEventListener("change", handler);
-  }, [theme, isHydrated]);
+  }, [theme, state.isHydrated, setState]);
 }

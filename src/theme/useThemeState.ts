@@ -1,18 +1,15 @@
-import { create } from "@ilokesto/caro-kann";
-import { persist } from "@ilokesto/caro-kann/middleware";
 import { SetStateAction, useRef } from "react";
 import { Theme } from "../types";
 import { TRANSITION_CLASS } from "./constants";
+import { useInternalTheme } from "./useInternalTheme";
 
-const useTheme = create(persist(
-  "system" as Theme, // default value
-  {
-    local: "theme",
-  }
-))
-
+/**
+ * 테마 상태 관리 훅
+ * - useInternalTheme을 사용하여 자동으로 로컬스토리지와 동기화
+ * - 테마 변경 시 부드러운 전환 효과 제공
+ */
 export function useThemeState() {
-  const [theme, setThemeState] = useTheme();
+  const [theme, setInternalTheme] = useInternalTheme();
   const transitionTimeoutRef = useRef<number | null>(null);
 
   const setTheme = (newTheme: SetStateAction<Theme>) => {
@@ -27,17 +24,18 @@ export function useThemeState() {
         window.clearTimeout(transitionTimeoutRef.current);
       }
 
-      // 250ms 이후에 transition 클래스 제거
+      // 200ms 이후에 transition 클래스 제거 (150ms transition + 50ms 여유)
       transitionTimeoutRef.current = window.setTimeout(() => {
         html.classList.remove(TRANSITION_CLASS);
         transitionTimeoutRef.current = null;
-      }, 250);
+      }, 200);
     } catch (e) {
       // DOM 접근 실패 시 그냥 계속
     }
 
-    setThemeState(newTheme);
+    // persist 미들웨어가 자동으로 로컬스토리지에 저장
+    setInternalTheme(newTheme);
   };
 
-  return { theme, setTheme, setThemeState };
+  return { theme, setTheme };
 }

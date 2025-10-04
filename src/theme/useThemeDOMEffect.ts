@@ -1,11 +1,14 @@
 import { useEffect } from "react";
-import { Theme } from "../types";
+import { useEffectiveThemeState } from "./useEffectiveThemeState";
 
-export function useThemeDOMEffect(
-  theme: Theme,
-  effectiveTheme: "light" | "dark",
-  isHydrated: boolean
-) {
+/**
+ * 테마 DOM 효과 훅
+ * - effectiveTheme에 따라 DOM의 'dark' 클래스를 토글
+ * - useInternalTheme이 자동으로 로컬스토리지를 처리하므로 별도의 저장 로직 불필요
+ */
+export function useThemeDOMEffect() {
+  const [{ effectiveTheme, isHydrated }] = useEffectiveThemeState();
+
   useEffect(() => {
     if (!isHydrated) return;
 
@@ -20,12 +23,5 @@ export function useThemeDOMEffect(
     } else if (!shouldBeDark && currentlyDark) {
       htmlElement.classList.remove("dark");
     }
-
-    // localStorage에 저장
-    if (theme === "system") {
-      localStorage.removeItem("theme");
-    } else {
-      localStorage.setItem("theme", theme);
-    }
-  }, [theme, effectiveTheme, isHydrated]);
+  }, [effectiveTheme, isHydrated]);
 }

@@ -1,6 +1,6 @@
 {
   "name": "neato",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "A powerful utility library for efficient CSS class management in React applications",
   "keywords": [
     "css",

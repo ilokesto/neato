@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "@ilokesto/caro-kann": "^4.0.1",
+    "@material/material-color-utilities": "^0.3.0",
     "clsx": "^2.1.1",
     "commander": "^14.0.1",
     "tailwind-merge": "^3.3.1"

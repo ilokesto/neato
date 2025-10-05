@@ -11,6 +11,9 @@ importers:
       '@ilokesto/caro-kann':
         specifier: ^4.0.1
         version: 4.0.1(@ilokesto/common-resolver@1.0.1)(react@19.1.1)
+      '@material/material-color-utilities':
+        specifier: ^0.3.0
+        version: 0.3.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -163,6 +166,9 @@ packages:
   '@jest/types@30.2.0':
     resolution: {integrity: sha512-H9xg1/sfVvyfU7o3zMfBEjQ1gcsdeTMgqHoYdN79tuLqfTtuu7WckRA1R5whDwOzxaZAeMKTYWqP+WCAi0CHsg==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
+
+  '@material/material-color-utilities@0.3.0':
+    resolution: {integrity: sha512-ztmtTd6xwnuh2/xu+Vb01btgV8SQWYCaK56CkRK8gEkWe5TuDyBcYJ0wgkMRn+2VcE9KUmhvkz+N9GHrqw/C0g==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -814,6 +820,8 @@ snapshots:
       '@types/node': 24.6.2
       '@types/yargs': 17.0.33
       chalk: 4.1.2
+
+  '@material/material-color-utilities@0.3.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
